@@ -1,15 +1,16 @@
 diff --git a/index.html b/index.html
 new file mode 100644
-index 0000000..ed8e674
+index 0000000..36ba300
 --- /dev/null
 +++ b/index.html
-@@ -0,0 +1,6732 @@
+@@ -0,0 +1,6875 @@
 +<!DOCTYPE html>
 +<html lang="en">
 +<head>
 +  <meta charset="UTF-8" />
 +  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 +  <title>Lance Lim — Product Manager</title>
++  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐱</text></svg>" />
 +  <link rel="preconnect" href="https://fonts.googleapis.com" />
 +  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 +  <link
@@ -161,6 +162,7 @@ index 0000000..ed8e674
 +    }
 +    .hero-headline .line { display: block; }
 +    .hero-headline .line:first-child { color: var(--ink); }
++    .hero-headline .line:last-child { margin-top: 0.3em; }
 +    /* "Product Manager." sits a few shades softer than the name —
 +       keeps the eye landing on Lance first. */
 +    .hero-headline .accent {
@@ -3807,7 +3809,7 @@ index 0000000..ed8e674
 +      <div class="works-side-label works-side-label--left">Best Cases</div>
 +      <div class="works-side-label works-side-label--right">Honors</div>
 +      <div class="works-heading">My <em>Projects</em></div>
-+      <div class="works-subheading">showcasing some of my more interesting works recently</div>
++      <div class="works-subheading">A selection of my most interesting recent work.</div>
 +
 +      <div class="works-stage" data-parallax="0.03">
 +        <div class="works-list" id="worksList">
@@ -4279,7 +4281,7 @@ index 0000000..ed8e674
 +          <h2>Reflection</h2>
 +
 +          <p style="color:var(--ink-soft); font-size:0.88rem; margin-bottom:24px;">
-+            Two things I'd carry into the next one.
++            Three things I'd carry into the next one.
 +          </p>
 +
 +          <div class="cs-rpoints">
@@ -4308,6 +4310,21 @@ index 0000000..ed8e674
 +                  compliance, legal, finance, risk — all with legitimate gates on the project.
 +                  Pulling them into discovery (not just review) made the difference between
 +                  blockers and collaborators. Wouldn't underestimate that coordination cost again.
++                </p>
++              </div>
++            </div>
++
++            <div class="cs-rpoint">
++              <div class="cs-rpoint-icon">🧭</div>
++              <div class="cs-rpoint-body">
++                <span class="cs-rpoint-title">Owning a cross-functional project taught me how to lead without authority</span>
++                <p>
++                  This was the most cross-functional project I'd run — payments, compliance,
++                  legal, engineering, regional biz, all moving at different speeds with different
++                  priorities. There's no direct line of authority over any of them. What I learned
++                  is that you move things forward by making it easy for each team to say yes —
++                  being clear on the ask, the dependency, and what's at risk if it slips. That
++                  skill matters more than any product framework.
 +                </p>
 +              </div>
 +            </div>
@@ -4667,9 +4684,10 @@ index 0000000..ed8e674
 +              <p class="v-insight-body">
 +                The majority of users who eventually traded did so within
 +                the <strong>first 7 days</strong> of signup. Beyond that
-+                window, users were <strong>5×</strong> less likely to ever
-+                trade. Pre-launch activation in SEA averaged
-+                <strong>19%</strong> across VN/ID/PH — and email/push
++                window, activation probability dropped sharply — users who
++                hadn't traded within 7 days were roughly <strong>5×</strong>
++                less likely to ever do so. Pre-launch activation in SEA
++                averaged <strong>19%</strong> across VN/ID/PH — and email/push
 +                reactivation barely moved the number, because there was no
 +                real incentive for users to come back.
 +              </p>
@@ -4679,7 +4697,8 @@ index 0000000..ed8e674
 +              <div class="v-insight-num">02 / INTERVIEWS</div>
 +              <div class="v-insight-title">Users were already rate-shopping</div>
 +              <p class="v-insight-body">
-+                8 in-depth interviews + 412 survey responses (VN/ID/PH).
++                Initial validation: in-depth interviews + 412 survey
++                responses across VN/ID/PH.
 +                <strong>&gt;80%</strong> held accounts on 2+ exchanges and
 +                rate-shopped per trade. <strong>64%</strong> cited
 +                rates / fees as the top decision factor on a given day.
@@ -4851,8 +4870,14 @@ index 0000000..ed8e674
 +                  Issuing vouchers at signup attracts deal-hunters with low intent.
 +                  We tied issuance to <strong>specific behaviours</strong> — first
 +                  deposit, first trade, dormancy thresholds — so each voucher both
-+                  rewarded an action and nudged the next one. This also kept unit
-+                  economics honest.
++                  rewarded an action and nudged the next one.
++                </p>
++                <p class="v-principle-text" style="margin-top:8px;">
++                  This was also how we kept the unit economics in check. The goal wasn't
++                  sign-ups — it was converting takers into active traders. By gating
++                  vouchers behind completing a trading activity, every voucher claimed
++                  meant a trade had already happened. ROI was built into the mechanic
++                  by design, not tracked after the fact.
 +                </p>
 +              </div>
 +            </div>
@@ -4925,6 +4950,44 @@ index 0000000..ed8e674
 +            and cashback rebates — growth teams can mix voucher types within a
 +            single campaign.
 +          </p>
++
++          <div class="v-beat" style="margin-top:24px;">
++            <span class="v-beat-tag">What we considered and rejected</span>
++            <p>
++              Three alternatives were on the table before landing on the engine design.
++              Each was a real option — the rejections weren't obvious.
++            </p>
++          </div>
++
++          <div class="v-needs">
++            <div class="v-need">
++              <div class="v-need-seg">✗ Points / loyalty programme</div>
++              <p class="v-need-line">
++                <strong>Rejected.</strong> Too long a feedback loop for a cold-start problem.
++                A user has to accumulate points before seeing any value — that's the opposite
++                of what we needed at activation. The payoff is too deferred to close the
++                rate gap on a first trade.
++              </p>
++            </div>
++            <div class="v-need">
++              <div class="v-need-seg">✗ Blanket discount to all users</div>
++              <p class="v-need-line">
++                <strong>Rejected.</strong> Flat discounts sent to everyone treat a churned
++                user and a high-intent new user identically. No behaviour signal, no
++                compounding, and the unit economics don't hold — you subsidise deal-hunters
++                who were never going to stay.
++              </p>
++            </div>
++            <div class="v-need">
++              <div class="v-need-seg">✗ Merchant-side subsidy</div>
++              <p class="v-need-line">
++                <strong>Rejected.</strong> Supply wasn't the constraint — merchants were
++                already posting ads. The problem was demand. Subsidising merchants without
++                pulling more takers wouldn't have moved the flywheel; it would have
++                over-served a side that didn't need the help.
++              </p>
++            </div>
++          </div>
 +        </div>
 +
 +        <!-- v. RESULTS -->
@@ -4932,24 +4995,38 @@ index 0000000..ed8e674
 +          <div class="num">v.</div>
 +          <h2>Results</h2>
 +
-+          <p style="color:var(--ink-soft); font-size:0.88rem; margin-bottom:8px;">
-+            Ran the engine across VN, ID, and PH over the first 3 months
-+            post-launch. Two headline outcomes:
++          <p style="color:var(--ink-soft); font-size:0.88rem; margin-bottom:24px;">
++            Ran the engine across VN, ID, and PH over the first 3 months post-launch.
 +          </p>
 +
-+          <!-- Hero results — sign-ups + deposit volume -->
-+          <div class="v-hero-grid">
-+            <div class="v-stat-card blue">
-+              <div class="v-stat-eyebrow">NEW USER SIGN-UPS</div>
-+              <div class="v-stat-num">+120%</div>
-+              <p class="v-stat-label">Net new sign-ups vs. the prior 3-month baseline.</p>
-+              <p class="v-stat-sub">Voucher-triggered acquisition compounded month-over-month across all three markets.</p>
-+            </div>
-+            <div class="v-stat-card teal">
-+              <div class="v-stat-eyebrow">P2P DEPOSIT VOLUME</div>
-+              <div class="v-stat-num">+80%</div>
-+              <p class="v-stat-label">Average lift in deposit volume via P2P across VN, ID, and PH.</p>
-+              <p class="v-stat-sub">Each region reached an all-time monthly volume high inside the 3-month window.</p>
++          <!-- How we changed user behaviour -->
++          <div style="margin:0 0 28px;">
++            <h3 style="font-size:0.9rem; font-weight:700; color:var(--ink); margin:0 0 14px;">How we changed user behaviour</h3>
++
++            <div style="display:grid; gap:12px;">
++
++              <div style="padding:16px 18px; border:1px solid var(--line); border-radius:10px; background:var(--highlight);">
++                <div style="font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; opacity:0.45; margin-bottom:6px;">Activation rate</div>
++                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
++                  <span style="font-size:1.7rem; font-weight:800; color:#2D5BFF; line-height:1;">~60%</span>
++                  <span style="font-size:0.78rem; color:var(--ink-soft);">by month 3, up from <strong style="color:var(--ink);">19%</strong> at launch</span>
++                </div>
++                <p style="font-size:0.82rem; line-height:1.6; margin:0; color:var(--ink-soft);">
++                  Among voucher-receiving cohorts, activation reached ~60% — outperforming both push and email reactivation and the 19% pre-launch baseline across all three markets.
++                </p>
++              </div>
++
++              <div style="padding:16px 18px; border:1px solid var(--line); border-radius:10px; background:var(--highlight);">
++                <div style="font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; opacity:0.45; margin-bottom:6px;">30-day repeat trading</div>
++                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
++                  <span style="font-size:1.7rem; font-weight:800; color:#2D5BFF; line-height:1;">~48%</span>
++                  <span style="font-size:0.78rem; color:var(--ink-soft);">up from <strong style="color:var(--ink);">&lt;20%</strong> pre-launch</span>
++                </div>
++                <p style="font-size:0.82rem; line-height:1.6; margin:0; color:var(--ink-soft);">
++                  Voucher cohorts retained significantly better. Behaviour-gated issuance attracted higher-intent users from the start — they came to trade, not just claim a discount.
++                </p>
++              </div>
++
 +            </div>
 +          </div>
 +
@@ -4973,6 +5050,25 @@ index 0000000..ed8e674
 +            immediately after SEA — no new engineering required. Each new
 +            market onboards through configuration.
 +          </p>
++
++          <!-- Overall impact -->
++          <div style="margin:28px 0 0; border-top:1px solid var(--line); padding-top:24px;">
++            <h3 style="font-size:0.9rem; font-weight:700; color:var(--ink); margin:0 0 14px;">Overall impact</h3>
++            <div class="v-hero-grid">
++              <div class="v-stat-card blue">
++                <div class="v-stat-eyebrow">FIRST-TIME TRADERS</div>
++                <div class="v-stat-num">+120%</div>
++                <p class="v-stat-label">Net new users completing a first P2P trade vs. the prior 3-month baseline.</p>
++                <p class="v-stat-sub">Vouchers were rolled out to new cohorts progressively across the 3-month window. Within those cohorts, activation reached ~60% — the platform-wide lift reflects partial rollout coverage.</p>
++              </div>
++              <div class="v-stat-card teal">
++                <div class="v-stat-eyebrow">P2P DEPOSIT VOLUME</div>
++                <div class="v-stat-num">+80%</div>
++                <p class="v-stat-label">Average lift in deposit volume via P2P across VN, ID, and PH.</p>
++                <p class="v-stat-sub">Each region reached an all-time monthly volume high inside the 3-month window.</p>
++              </div>
++            </div>
++          </div>
 +        </div>
 +
 +        <!-- vi. REFLECTION -->
@@ -4987,22 +5083,25 @@ index 0000000..ed8e674
 +          <div class="v-insights">
 +            <div class="v-insight">
 +              <div class="v-insight-num">LESSON 01</div>
-+              <div class="v-insight-title">Growing the business isn't just a product thing</div>
++              <div class="v-insight-title">Build infrastructure, not campaigns</div>
 +              <p class="v-insight-body">
-+                Growing the business is not just a product thing — it
-+                really requires strong co-operation with the business and
-+                product marketing teams, to make sure the GTM strategy
-+                lands and users actually know about this as well.
++                The most important call on this project wasn't a product feature —
++                it was insisting on engine infrastructure over a one-off promo. A
++                seasonal campaign would have shipped faster. The engine took more
++                convincing. But when seven markets onboarded with zero additional
++                engineering, that single scoping decision compounded in a way no
++                promo ever could.
 +              </p>
 +            </div>
 +
 +            <div class="v-insight">
 +              <div class="v-insight-num">LESSON 02</div>
-+              <div class="v-insight-title">Scalability is key — but earn it with small wins first</div>
++              <div class="v-insight-title">The design of the incentive matters more than the size</div>
 +              <p class="v-insight-body">
-+                Scalability is key, but you need to do growth hacking
-+                first — find small wins to validate the idea before
-+                committing to something that can scale across regions.
++                A bigger discount doesn't build a stronger retention loop. The difference
++                between a promo that spikes and one that compounds is in when and how it's
++                issued — tied to a specific behaviour, not handed out on signup. Getting
++                that design right was the actual work. The voucher value itself was secondary.
 +              </p>
 +            </div>
 +          </div>
@@ -5432,27 +5531,25 @@ index 0000000..ed8e674
 +            <div class="cs-rpoint">
 +              <div class="cs-rpoint-icon">🧠</div>
 +              <div class="cs-rpoint-body">
-+                <span class="cs-rpoint-title">The opportunity came from being on the ground</span>
++                <span class="cs-rpoint-title">Being a PM is more than executing a good project</span>
 +                <p>
-+                  This feature wasn't surfaced by a data pull or a product review. It came from
-+                  being close to merchants — watching them obsess over their rank, listening to them
-+                  talk about rate compression as a cost of staying visible. That pattern, repeated
-+                  across enough conversations, made the opportunity obvious. Merchants were already
-+                  paying to compete for position; they just weren't paying us. Understanding what
-+                  merchants actually cared about — not what we assumed they cared about — was the
-+                  entire reason we found this.
++                  This project reminded me that the job isn't just delivery. It's about
++                  being curious enough to dig into the data, hands-on enough to speak to
++                  users, and sharp enough to connect the dots into something the business
++                  hasn't monetised yet. Uncovering untapped opportunities is as much a part
++                  of the role as shipping them.
 +                </p>
 +              </div>
 +            </div>
 +            <div class="cs-rpoint">
-+              <div class="cs-rpoint-icon">🔁</div>
++              <div class="cs-rpoint-icon">🏆</div>
 +              <div class="cs-rpoint-body">
-+                <span class="cs-rpoint-title">If I could revisit one decision</span>
++                <span class="cs-rpoint-title">One of my proudest projects — not because of the numbers</span>
 +                <p>
-+                  The merchant onboarding experience. The first version was functional but not
-+                  intuitive — merchants needed multiple support touchpoints before placing their
-+                  first bid. A clearer, more guided flow would have accelerated adoption in the
-+                  first 30 days and closed the time-to-value gap faster on both sides.
++                  As a junior PM, I was able to single-handedly identify and ship a new
++                  monetisation model for my business unit. The revenue mattered, but what
++                  stuck with me more was proving that a junior could own something end-to-end
++                  — from spotting the gap to getting it live.
 +                </p>
 +              </div>
 +            </div>
@@ -5507,6 +5604,7 @@ index 0000000..ed8e674
 +        <a class="toc-link" data-toc href="#api-approach">Approach</a>
 +        <a class="toc-link" data-toc href="#api-built">What we built</a>
 +        <a class="toc-link" data-toc href="#api-results">Results</a>
++        <a class="toc-link" data-toc href="#api-reflect">Reflection</a>
 +      </nav>
 +
 +      <div class="case-content">
@@ -5573,7 +5671,7 @@ index 0000000..ed8e674
 +          <div class="num">iii.</div>
 +          <h2>Problem</h2>
 +
-+          <p class="cs-lede">The demand was clear. The hard part was figuring out what exactly to build, how to size it, and who we were actually building it for.</p>
++          <p class="cs-lede">The demand was clear. The hard part was figuring out exactly what to build, how to size it, and who we were actually building it for.</p>
 +
 +          <div class="cs-risk-pair">
 +            <div class="cs-risk-card">
@@ -5742,6 +5840,41 @@ index 0000000..ed8e674
 +              <div style="height:1px; background:var(--line); margin-bottom:12px;"></div>
 +              <div style="font-size:1.4rem; font-weight:800; line-height:1; opacity:0.7;">~30%</div>
 +              <div style="font-size:0.72rem; opacity:0.55; margin-top:5px; line-height:1.5;">of EUR trading volume contributed by API merchants</div>
++            </div>
++          </div>
++        </div>
++
++        <!-- vii. REFLECTION -->
++        <div class="case-section" id="api-reflect">
++          <div class="num">vii.</div>
++          <h2>Reflection</h2>
++
++          <div class="cs-rpoints">
++            <div class="cs-rpoint">
++              <div class="cs-rpoint-icon">🧠</div>
++              <div class="cs-rpoint-body">
++                <span class="cs-rpoint-title">You only find this stuff by being on the ground</span>
++                <p>
++                  Speaking to users in Vietnam was what made this real. I didn't know
++                  there were makers operating as mini businesses — running bots,
++                  managing multiple accounts, treating P2P like a full operation. That
++                  insight only came from being there. You can't design the right product
++                  for a user you've never actually spoken to.
++                </p>
++              </div>
++            </div>
++            <div class="cs-rpoint">
++              <div class="cs-rpoint-icon">⚙️</div>
++              <div class="cs-rpoint-body">
++                <span class="cs-rpoint-title">Being technical as a PM genuinely helps</span>
++                <p>
++                  This project required translating what merchants needed into proper
++                  business requirements and technical specs. Without a baseline technical
++                  understanding, you lose precision at every handoff. Being able to speak
++                  both languages — user needs and engineering constraints — made
++                  collaboration faster and the output sharper.
++                </p>
++              </div>
 +            </div>
 +          </div>
 +        </div>
@@ -6571,9 +6704,11 @@ index 0000000..ed8e674
 +  <script>
 +    (() => {
 +      const AUTH_KEY  = 'portfolio_unlocked';
-+      // SHA-256 of the gate password. The raw password is intentionally not
-+      // present in source — input is hashed and compared against this digest.
-+      const PW_HASH   = 'fa167e628d7a37631ae4f5d016e7e79a1b50fd4836b7208fcbdd7e1f528e4f66';
++      // PBKDF2-SHA256 (300 000 iterations) of the gate password.
++      // Raw password is never present in source or devtools.
++      const PW_HASH   = 'c89cf7ea010d27df55fd23a659af41f6014e243b4b41cbf501af5308bb8ac91a';
++      const PW_SALT   = 'lancelim_portfolio_2024';
++      const PW_ITERS  = 300000;
 +      const overlay   = document.getElementById('pwOverlay');
 +      const input     = document.getElementById('pwInput');
 +      const submit    = document.getElementById('pwSubmit');
@@ -6653,12 +6788,20 @@ index 0000000..ed8e674
 +        }
 +      }
 +
-+      // Hash the candidate with SHA-256 and compare to PW_HASH. Avoids
-+      // putting the raw password in source / devtools.
-+      async function sha256Hex(str) {
-+        const buf = new TextEncoder().encode(str);
-+        const digest = await crypto.subtle.digest('SHA-256', buf);
-+        return Array.from(new Uint8Array(digest))
++      // Derives a PBKDF2-SHA256 hex string from the candidate password.
++      // 300 000 iterations means brute-forcing the stored hash is
++      // computationally impractical even with the salt visible in source.
++      async function pbkdf2Hex(str) {
++        const enc = new TextEncoder();
++        const keyMaterial = await crypto.subtle.importKey(
++          'raw', enc.encode(str), 'PBKDF2', false, ['deriveBits']
++        );
++        const bits = await crypto.subtle.deriveBits(
++          { name: 'PBKDF2', salt: enc.encode(PW_SALT), iterations: PW_ITERS, hash: 'SHA-256' },
++          keyMaterial,
++          256
++        );
++        return Array.from(new Uint8Array(bits))
 +          .map(b => b.toString(16).padStart(2, '0'))
 +          .join('');
 +      }
@@ -6668,7 +6811,7 @@ index 0000000..ed8e674
 +        if (!candidate) return;
 +        let hex;
 +        try {
-+          hex = await sha256Hex(candidate);
++          hex = await pbkdf2Hex(candidate);
 +        } catch (err) {
 +          errorEl.textContent = 'Browser does not support secure hashing.';
 +          input.classList.add('error');
