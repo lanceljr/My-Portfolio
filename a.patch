@@ -1,8 +1,8 @@
-diff --git a/Users/lancelim/Desktop/test/index.html b/Users/lancelim/Desktop/test/index.html
+diff --git a/index.html /index.html
 new file mode 100644
 index 0000000..7a65d13
 --- /dev/null
-+++ b/Users/lancelim/Desktop/test/index.html
++++ /index.html
 @@ -0,0 +1,6892 @@
 +<!DOCTYPE html>
 +<html lang="en">
