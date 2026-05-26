@@ -139,11 +139,14 @@
     /* ─── HERO ─────────────────────────────────────────────── */
     .hero {
       min-height: 100vh;
-      padding: 100px 56px 160px;
+      padding: 100px 80px 160px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       position: relative;
+      max-width: 1560px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .hero-headline {
@@ -151,8 +154,8 @@
       font-size: clamp(2.4rem, 6.4vw, 5.2rem);
       letter-spacing: -0.035em;
       line-height: 1.02;
-      /* Leave 440px on the right for the post-it (320px + breathing room) */
-      max-width: min(900px, calc(100% - 440px));
+      /* Reserve 360px on the right for post-it (320px) + gap (40px) */
+      max-width: min(860px, calc(100% - 360px));
     }
     .hero-headline .line { display: block; }
     .hero-headline .line:first-child { color: var(--ink); }
@@ -334,15 +337,6 @@
       60%       { transform: rotate(3deg) translateX(-3px); }
     }
 
-    /* On very wide screens the headline is capped at 900px while the
-       post-it (right: 80px) drifts too far right. Anchor it to just
-       after the headline's right edge instead. */
-    @media (min-width: 1440px) {
-      .postit {
-        left: calc(56px + 900px + 40px);
-        right: auto;
-      }
-    }
 
     .scroll-cue {
       position: absolute;
@@ -3653,7 +3647,7 @@
       var start  = null;
       var anim   = null;
 
-      // Hard safety cap: always dismiss after 3.5 s even if rAF or
+      // Hard safety cap: always dismiss after 1.5 s even if rAF or
       // the Lottie CDN are delayed (e.g. offline, slow network).
       var dismissed = false;
       function dismiss() {
@@ -3662,7 +3656,7 @@
         loader.classList.add('fade-out');
         setTimeout(function () { loader.style.display = 'none'; if (anim) anim.destroy(); }, 520);
       }
-      setTimeout(dismiss, 3500);
+      setTimeout(dismiss, 1500);
 
       function initLottie() {
         if (typeof lottie === 'undefined') {
