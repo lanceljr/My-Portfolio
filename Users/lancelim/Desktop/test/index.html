@@ -334,6 +334,16 @@
       60%       { transform: rotate(3deg) translateX(-3px); }
     }
 
+    /* On very wide screens the headline is capped at 900px while the
+       post-it (right: 80px) drifts too far right. Anchor it to just
+       after the headline's right edge instead. */
+    @media (min-width: 1440px) {
+      .postit {
+        left: calc(56px + 900px + 40px);
+        right: auto;
+      }
+    }
+
     .scroll-cue {
       position: absolute;
       bottom: 100px;
@@ -540,7 +550,7 @@
     .works-heading {
       top: 56px;
       left: 100px;
-      font-size: 1rem;
+      font-size: 1.35rem;
       font-weight: 600;
       letter-spacing: -0.01em;
       text-transform: none;
@@ -548,9 +558,9 @@
     }
     .works-subheading {
       position: absolute;
-      top: 84px;
+      top: 88px;
       left: 100px;
-      font-size: 0.78rem;
+      font-size: 0.95rem;
       letter-spacing: 0.04em;
       color: var(--ink-soft);
       font-weight: 400;
@@ -3624,7 +3634,7 @@
       margin-top: -8px;
     }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+  <script async src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 </head>
 <body>
 
@@ -3642,6 +3652,17 @@
       var duration = 1900; // ms
       var start  = null;
       var anim   = null;
+
+      // Hard safety cap: always dismiss after 3.5 s even if rAF or
+      // the Lottie CDN are delayed (e.g. offline, slow network).
+      var dismissed = false;
+      function dismiss() {
+        if (dismissed) return;
+        dismissed = true;
+        loader.classList.add('fade-out');
+        setTimeout(function () { loader.style.display = 'none'; if (anim) anim.destroy(); }, 520);
+      }
+      setTimeout(dismiss, 3500);
 
       function initLottie() {
         if (typeof lottie === 'undefined') {
@@ -3668,13 +3689,7 @@
           requestAnimationFrame(tick);
         } else {
           pct.textContent = '100%';
-          setTimeout(function () {
-            loader.classList.add('fade-out');
-            setTimeout(function () {
-              loader.style.display = 'none';
-              if (anim) anim.destroy();
-            }, 520);
-          }, 120);
+          setTimeout(dismiss, 120);
         }
       }
 
@@ -3801,7 +3816,7 @@
     <!-- Works -->
     <section class="works" id="works-section">
       <div class="works-side-label works-side-label--left">Best Cases</div>
-      <div class="works-side-label works-side-label--right">Honors</div>
+      <div class="works-side-label works-side-label--right">i'm not slacking at work</div>
       <div class="works-heading">My <em>Projects</em></div>
       <div class="works-subheading">A selection of my most interesting recent work.</div>
 
@@ -3909,7 +3924,7 @@
 
     <div class="footer">
       <span>© 2026 Lance Lim</span>
-      <span>Made with curiosity & coffee</span>
+      <span>Made with coffee and LOVE</span>
     </div>
   </main>
 
@@ -6170,6 +6185,12 @@
     function detectActiveSection() {
       // skip when on case views
       if (document.querySelector('.view.case.active')) return;
+      // When scrolled to the very bottom, the contact section may be
+      // shorter than the viewport threshold — force it active.
+      if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 50) {
+        setPlaying('contact');
+        return;
+      }
       const mid = window.scrollY + window.innerHeight * 0.4;
       let current = 'home';
       sectionIds.forEach(id => {
@@ -6575,35 +6596,31 @@
       }, 2000);
     }
 
-    // ── Per-section parallax: each layer drifts based on its own
-    //    distance from viewport center. Speed > 0 means layer moves
-    //    SLOWER than scroll (drifts upward as section approaches center).
+    // ── Parallax — delta-time exponential smoothing ────────
+    //    Pure JS, no dependencies. Uses real elapsed time so motion is
+    //    frame-rate independent (same feel at 60 Hz and 120 Hz).
     const parallaxLayers = Array.from(
       document.querySelectorAll('[data-parallax]')
-    ).map(el => ({
-      el,
-      speed: parseFloat(el.dataset.parallax) || 0,
-    }));
+    ).map(el => {
+      el.style.willChange = 'transform';
+      return { el, speed: parseFloat(el.dataset.parallax) || 0, cur: 0 };
+    });
 
-    function updateParallax() {
-      const winH = window.innerHeight;
-      for (const { el, speed } of parallaxLayers) {
-        const r = el.getBoundingClientRect();
-        const sectionCenter = r.top + r.height / 2;
-        const dist = sectionCenter - winH / 2;          // px from viewport center
-        const offset = -dist * speed;                    // negative → drift up
-        el.style.transform = `translate3d(0, ${offset.toFixed(2)}px, 0)`;
+    let _pLast = performance.now();
+    (function pLoop(now) {
+      const dt     = Math.min((now - _pLast) / 1000, 0.05);
+      _pLast       = now;
+      const factor = 1 - Math.exp(-dt * 5.5);
+      const winH   = window.innerHeight;
+      for (const layer of parallaxLayers) {
+        const r      = layer.el.getBoundingClientRect();
+        const target = -(r.top + r.height / 2 - winH / 2) * layer.speed;
+        const diff   = target - layer.cur;
+        layer.cur   += Math.abs(diff) < 0.05 ? diff : diff * factor;
+        layer.el.style.transform = `translate3d(0,${layer.cur.toFixed(2)}px,0)`;
       }
-    }
-    let pTick = false;
-    window.addEventListener('scroll', () => {
-      if (!pTick) {
-        requestAnimationFrame(() => { updateParallax(); pTick = false; });
-        pTick = true;
-      }
-    }, { passive: true });
-    window.addEventListener('resize', updateParallax, { passive: true });
-    updateParallax();
+      requestAnimationFrame(pLoop);
+    })(performance.now());
 
     // ── Case study TOC: scroll-spy + smooth scroll ──────
     document.querySelectorAll('.case-v2').forEach(caseEl => {
