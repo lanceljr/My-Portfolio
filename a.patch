@@ -1,6 +1,9 @@
---- a/index.html
-+++ b/index.html
-@@ -0,0 +1,6886 @@
+diff --git /index.html /index.html
+new file mode 100644
+index 0000000..42649e2
+--- /dev/null
++++ /index.html
+@@ -0,0 +1,7141 @@
 +<!DOCTYPE html>
 +<html lang="en">
 +<head>
@@ -221,26 +224,39 @@
 +        0 22px 36px rgba(20,18,12,0.10);
 +      transform: translate(var(--dx, 0px), calc(-50% + var(--dy, 0px))) rotate(var(--rot, -2.4deg));
 +      transition: box-shadow 0.18s ease;
++      will-change: transform;
++      animation: postit-lift 4s ease-in-out infinite;
 +    }
 +    .postit.dragging {
 +      cursor: grabbing;
 +      transition: none;
++      animation: none;
 +      box-shadow:
 +        0 1px 1px rgba(0,0,0,0.10),
 +        0 28px 52px rgba(20,18,12,0.30),
 +        0 44px 80px rgba(20,18,12,0.12);
 +    }
 +
-+    /* Idle wiggle — re-applies dx/dy so position is preserved */
-+    @keyframes postit-wiggle {
-+      0%   { transform: translate(var(--dx,0px), calc(-50% + var(--dy,0px))) rotate(calc(var(--rot,-2.4deg) - 3deg)); }
-+      20%  { transform: translate(var(--dx,0px), calc(-50% + var(--dy,0px))) rotate(calc(var(--rot,-2.4deg) + 3deg)); }
-+      40%  { transform: translate(var(--dx,0px), calc(-50% + var(--dy,0px))) rotate(calc(var(--rot,-2.4deg) - 2deg)); }
-+      60%  { transform: translate(var(--dx,0px), calc(-50% + var(--dy,0px))) rotate(calc(var(--rot,-2.4deg) + 1.2deg)); }
-+      80%  { transform: translate(var(--dx,0px), calc(-50% + var(--dy,0px))) rotate(calc(var(--rot,-2.4deg) - 0.5deg)); }
-+      100% { transform: translate(var(--dx,0px), calc(-50% + var(--dy,0px))) rotate(var(--rot,-2.4deg)); }
++    /* Continuous lift — only transform animates (GPU layer, no paint) */
++    @keyframes postit-lift {
++      0%, 100% {
++        transform: translate(var(--dx,0px), calc(-50% + var(--dy,0px))) rotate(var(--rot,-2.4deg));
++      }
++      50% {
++        transform: translate(var(--dx,0px), calc(-50% + var(--dy,0px) - 10px)) rotate(var(--rot,-2.4deg)) scale(1.015);
++      }
 +    }
-+    .postit.wiggling { animation: postit-wiggle 0.75s ease-out; }
++    .postit.wiggling { animation: postit-lift 4s ease-in-out infinite; }
++
++    /* Mobile variant — no -50% correction (postit is position:relative, not absolute+top:50%) */
++    @keyframes postit-lift-mobile {
++      0%, 100% {
++        transform: translate(var(--dx,0px), var(--dy,0px)) rotate(var(--rot,-1.6deg));
++      }
++      50% {
++        transform: translate(var(--dx,0px), calc(var(--dy,0px) - 10px)) rotate(var(--rot,-1.6deg)) scale(1.015);
++      }
++    }
 +
 +    /* Shake easter egg — bigger amplitude, flashes red border briefly */
 +    @keyframes postit-shake-glow {
@@ -265,7 +281,7 @@
 +      width: 88px; height: 22px;
 +      background: rgba(255,255,255,0.55);
 +      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
-+      pointer-events: none;
++      cursor: grab;
 +    }
 +    .postit p {
 +      margin: 0 0 8px;
@@ -386,6 +402,7 @@
 +      padding: 0;
 +      max-width: none;
 +      margin: 0;
++      background: #101011;
 +    }
 +    .about-sticky {
 +      position: sticky;
@@ -492,9 +509,30 @@
 +    .about-text em.fiat   { background: var(--highlight); color: var(--ink); }
 +    .about-text em.market { background: var(--highlight); color: var(--ink); }
 +
++    /* ── About-section always-dark overrides ─────────────── */
++    .about .about-label { color: rgba(255,255,255,0.4); }
++    .about .about-text .word { color: rgba(255,255,255,0.18); }
++    .about .about-text .word.lit { color: #ECEAE0; }
++    .about .about-text .toggle-word { color: rgba(255,255,255,0.25); }
++    .about .about-text .toggle-word.lit { background: #ECEAE0; color: #101011; }
++    .about .about-text .toggle-word::after { color: #ECEAE0; }
++    .about .about-text em.fiat,
++    .about .about-text em.market { background: rgba(255,255,255,0.12); color: #ECEAE0; }
++
++    /* ── About: dark-mode inversion → off-white ──────────── */
++    [data-theme="dark"] .about { background: #ECEAE0; }
++    [data-theme="dark"] .about .about-label { color: rgba(0,0,0,0.4); }
++    [data-theme="dark"] .about .about-text .word { color: rgba(0,0,0,0.14); }
++    [data-theme="dark"] .about .about-text .word.lit { color: #101011; }
++    [data-theme="dark"] .about .about-text .toggle-word { color: rgba(0,0,0,0.22); }
++    [data-theme="dark"] .about .about-text .toggle-word.lit { background: #101011; color: #ECEAE0; }
++    [data-theme="dark"] .about .about-text .toggle-word::after { color: #101011; }
++    [data-theme="dark"] .about .about-text em.fiat,
++    [data-theme="dark"] .about .about-text em.market { background: rgba(0,0,0,0.09); color: #101011; }
++
 +    /* ─── WORKS (paper layer, theme-aware) ─────────────────── */
 +    .works {
-+      background: var(--works-bg);
++      background: var(--bg);
 +      color: var(--ink);
 +      padding: 0;
 +      position: relative;
@@ -845,14 +883,17 @@
 +
 +    /* ─── CONTACT ──────────────────────────────────────────── */
 +    .contact {
-+      padding: 80px 56px 100px;
++      padding: 80px 80px 100px;
 +      text-align: left;
-+      max-width: 1100px;
++      max-width: none;
++      width: 100%;
 +      margin: 0;
 +      position: relative;
 +      display: flex;
 +      flex-direction: column;
 +      justify-content: center;
++      background: #101011;
++      color: #ECEAE0;
 +    }
 +    .contact h2 {
 +      font-weight: 700;
@@ -860,15 +901,16 @@
 +      letter-spacing: -0.03em;
 +      line-height: 1.05;
 +      max-width: 760px;
++      color: #ECEAE0;
 +    }
 +    .contact h2 em {
 +      font-style: normal;
 +      font-weight: 700;
-+      color: var(--accent);
++      color: #ECEAE0;
 +    }
 +    .contact-sub {
 +      font-size: 0.95rem;
-+      color: var(--mute);
++      color: rgba(255,255,255,0.45);
 +      margin: 12px 0 0;
 +      font-weight: 400;
 +    }
@@ -876,39 +918,116 @@
 +      margin-top: 56px;
 +      display: grid;
 +      grid-template-columns: repeat(2, 1fr);
-+      gap: 12px;
-+      max-width: 680px;
++      gap: 14px;
++      max-width: 760px;
 +    }
++    /* ── Horizontal info cards ── */
 +    .contact-card {
-+      padding: 28px 32px;
-+      background: var(--softmute);
-+      color: var(--ink);
-+      border-radius: 18px;
++      position: relative;
++      padding: 28px 28px 36px;
++      background: rgba(255,255,255,0.07);
++      color: #ECEAE0;
++      border-radius: 20px;
++      display: flex;
++      flex-direction: column;
++      gap: 20px;
++      text-decoration: none;
++      overflow: hidden;
++      transition: background 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
++      cursor: pointer;
++    }
++    .contact-card:hover {
++      background: rgba(255,255,255,0.12);
++      transform: translateY(-3px);
++      box-shadow: 0 18px 48px rgba(0,0,0,0.55);
++    }
++    /* Top row: service icon + label, action icon */
++    .card-header {
 +      display: flex;
 +      align-items: center;
 +      justify-content: space-between;
-+      gap: 20px;
-+      transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease;
 +    }
-+    .contact-card .ctype {
-+      font-size: 0.7rem;
-+      letter-spacing: 0.18em;
++    .card-meta {
++      display: flex;
++      align-items: center;
++      gap: 8px;
++    }
++    .contact-icon {
++      width: 20px;
++      height: 20px;
++      flex-shrink: 0;
++    }
++    .card-type {
++      font-size: 0.68rem;
++      font-weight: 700;
++      letter-spacing: 0.1em;
 +      text-transform: uppercase;
-+      color: var(--mute);
-+      margin-bottom: 4px;
-+      transition: color 0.25s ease;
++      color: rgba(236,234,224,0.45);
 +    }
-+    .contact-card .cval {
-+      font-size: 1.05rem;
-+      font-weight: 500;
++    .card-action {
++      width: 18px;
++      height: 18px;
++      color: rgba(236,234,224,0.4);
++      flex-shrink: 0;
++      transition: color 0.2s ease, transform 0.2s ease;
 +    }
-+    .contact-card .arrow {
-+      font-size: 1.5rem;
-+      transition: transform 0.25s ease;
++    .contact-card:hover .card-action { color: #ECEAE0; transform: translate(2px, -2px); }
++    /* Address */
++    .card-address {
++      font-size: 1rem;
++      font-weight: 600;
++      color: #ECEAE0;
++      letter-spacing: -0.02em;
++      line-height: 1.2;
 +    }
-+    .contact-card:hover { background: var(--ink); color: var(--bg); transform: translateY(-3px); }
-+    .contact-card:hover .ctype { color: rgba(128,128,120,0.7); }
-+    .contact-card:hover .arrow { transform: translate(4px, -4px); }
++    /* Cursor-following tooltip (body-level, position:fixed) */
++    .cursor-tip {
++      position: fixed;
++      background: #ECEAE0;
++      color: #101011;
++      font-family: 'Manrope', sans-serif;
++      font-size: 0.76rem;
++      font-weight: 600;
++      white-space: nowrap;
++      padding: 7px 14px;
++      border-radius: 100px;
++      opacity: 0;
++      pointer-events: none;
++      transition: opacity 0.18s ease;
++      z-index: 200;
++      transform: translate(16px, -50%);
++    }
++    .cursor-tip.visible { opacity: 1; }
++    /* Typewriter cursor blink */
++    .cursor-tip .cursor {
++      display: inline-block;
++      width: 2px;
++      height: 0.9em;
++      background: #101011;
++      vertical-align: text-bottom;
++      margin-left: 1px;
++      animation: tipBlink 0.7s step-end infinite;
++    }
++    @keyframes tipBlink {
++      0%, 100% { opacity: 1; }
++      50%       { opacity: 0; }
++    }
++
++    /* ── Contact: dark-mode inversion → off-white ────────── */
++    [data-theme="dark"] .contact { background: #ECEAE0; color: #101011; }
++    [data-theme="dark"] .contact h2 { color: #101011; }
++    [data-theme="dark"] .contact h2 em { color: #101011; }
++    [data-theme="dark"] .contact-sub { color: rgba(0,0,0,0.45); }
++    [data-theme="dark"] .contact-card { background: rgba(0,0,0,0.07); color: #101011; }
++    [data-theme="dark"] .card-type { color: rgba(16,16,17,0.45); }
++    [data-theme="dark"] .card-action { color: rgba(16,16,17,0.4); }
++    [data-theme="dark"] .contact-card:hover .card-action { color: #101011; }
++    [data-theme="dark"] .card-address { color: #101011; }
++    [data-theme="dark"] .cursor-tip { background: #101011; color: #ECEAE0; }
++    [data-theme="dark"] .cursor-tip .cursor { background: #ECEAE0; }
++
++    /* ── Footer: dark-mode inversion → off-white ─────────── */
++    [data-theme="dark"] .footer { background: #ECEAE0; color: rgba(0,0,0,0.4); }
 +
 +    /* ─── BLOB THEME TOGGLE ─────────────────────────────────── */
 +    .theme-blob {
@@ -1023,9 +1142,10 @@
 +      display: flex;
 +      justify-content: space-between;
 +      font-size: 0.75rem;
-+      color: var(--mute);
++      color: rgba(255,255,255,0.35);
 +      letter-spacing: 0.06em;
 +      text-transform: uppercase;
++      background: #101011;
 +    }
 +
 +    /* ─── SPOTIFY-STYLE PILL MENU ─────────────────────────── */
@@ -2865,6 +2985,10 @@
 +
 +    /* ─── Responsive ──────────────────────────────────────── */
 +    @media (max-width: 900px) {
++      /* Override the global scroll-snap-stop:always so mobile scrolling
++         uses momentum and doesn't hard-lock at every section boundary. */
++      .hero, .about, .works, .contact { scroll-snap-stop: normal; }
++
 +      /* Apple-style sticky reveal on mobile. Outer is ~130dvh — gives
 +         ~30dvh of scroll travel for the words to light up, then the
 +         next section snaps in with no awkward gap. Sticky inner is one
@@ -2905,16 +3029,20 @@
 +        position: relative;
 +        left: auto; right: auto; bottom: auto; top: auto;
 +        width: min(320px, calc(100% - 48px));
-+        margin: 56px auto 0;
++        margin: 80px auto 0;
 +        font-size: 1rem;
 +        line-height: 1.5;
 +        padding: 22px 20px 18px;
 +        --rot: -1.6deg;
 +        /* No -50% correction needed — position is relative, not absolute */
 +        transform: translate(var(--dx, 0px), var(--dy, 0px)) rotate(var(--rot, -1.6deg));
++        /* Use mobile keyframe so the lift animation doesn't apply the
++           desktop -50% centering correction to a relative-positioned element */
++        animation: postit-lift-mobile 4s ease-in-out infinite;
 +        /* touch-action: none so pointer events fire for drag */
 +        touch-action: none;
 +      }
++      .postit.wiggling { animation: postit-lift-mobile 4s ease-in-out infinite; }
 +      /* Show drag hint on mobile — reposition for in-flow layout */
 +      .postit-hint {
 +        display: block;
@@ -3146,7 +3274,7 @@
 +
 +      .contact { padding: 60px 24px 80px; }
 +      .contact h2 { font-size: clamp(1.6rem, 7vw, 2.2rem); }
-+      .contact-grid { grid-template-columns: 1fr !important; max-width: 100% !important; }
++      .contact-grid { max-width: 100% !important; }
 +      .case { padding: 80px 24px 160px; }
 +      .case-meta { grid-template-columns: 1fr 1fr; }
 +      .case-snapshot {
@@ -3208,7 +3336,7 @@
 +      .topbar .right .item { display: none; }
 +      .topbar .right .item:last-child { display: inline; }
 +      .hero { padding: 80px 20px 64px; }
-+      .postit { width: min(300px, calc(100% - 40px)); margin-top: 48px; padding: 20px 18px 16px; font-size: 0.98rem; }
++      .postit { width: min(300px, calc(100% - 40px)); margin-top: 64px; padding: 20px 18px 16px; font-size: 0.98rem; }
 +      /* 480px tweaks: shrink type a touch, tighten card padding —
 +         layout (single column, aspect-ratio card) inherited from 900px. */
 +      .about-text { font-size: clamp(1.2rem, 5.4vw, 1.55rem); }
@@ -3225,8 +3353,8 @@
 +      .wi-caption { font-size: 0.88rem; }
 +      .wi-cta { padding: 9px 16px; font-size: 0.78rem; }
 +      .contact { padding: 36px 20px 48px; }
-+      .contact-grid { gap: 10px; grid-template-columns: 1fr !important; max-width: 100% !important; }
-+      .contact-card { padding: 22px 24px; }
++      .contact-grid { gap: 10px; grid-template-columns: 1fr; }
++      .card-address { font-size: 0.92rem; }
 +      .footer { padding: 24px 20px; flex-direction: column; gap: 8px; }
 +    }
 +
@@ -3739,7 +3867,7 @@
 +        <span class="postit-tape" aria-hidden="true"></span>
 +        <span class="postit-hint">← drag me</span>
 +        <p>Born and raised in sunny island <em>Singapore</em> 🇸🇬.</p>
-+        <p>Firmly believes <strong>the office is the best sitcom.</strong></p>
++        <p>Turns user headaches into <strong>solutions that stick.</strong></p>
 +        <hr class="postit-divider"/>
 +        <label class="postit-label" for="heroIntro">tell me about you →</label>
 +        <input
@@ -3815,7 +3943,7 @@
 +      <div class="works-side-label works-side-label--left">Best Cases</div>
 +      <div class="works-side-label works-side-label--right">i'm not slacking at work</div>
 +      <div class="works-heading">My <em>Projects</em></div>
-+      <div class="works-subheading">A selection of my most interesting recent work.</div>
++      <div class="works-subheading">a selection of some of my more interesting works.</div>
 +
 +      <div class="works-stage" data-parallax="0.03">
 +        <div class="works-list" id="worksList">
@@ -3899,23 +4027,49 @@
 +
 +    <!-- Contact -->
 +    <section class="contact" id="contact-section">
-+      <h2 data-parallax="0.05">Let's <em>connect</em></h2>
-+      <p class="contact-sub" data-parallax="0.06">or just debate about the best sitcoms, no judgement.</p>
-+      <div class="contact-grid" data-parallax="0.08" style="grid-template-columns: 1fr 1fr; max-width: 560px; gap: 12px;">
-+        <a href="mailto:lanceljr98@gmail.com" class="contact-card">
-+          <div>
-+            <div class="ctype">Email</div>
-+            <div class="cval">lanceljr98@gmail.com</div>
++      <h2>Let's <em>connect</em></h2>
++      <p class="contact-sub">or just debate about the best sitcoms, no judgement.</p>
++      <div class="contact-grid">
++
++        <!-- Email card -->
++        <a href="mailto:lanceljr98@gmail.com" class="contact-card contact-card--email" id="emailCard">
++          <div class="card-header">
++            <div class="card-meta">
++              <!-- Gmail-style envelope icon -->
++              <svg class="contact-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
++                <rect x="2" y="5" width="20" height="14" rx="2.5" fill="#EA4335"/>
++                <path d="M2 8.5l10 6.5 10-6.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
++              </svg>
++              <span class="card-type">Email</span>
++            </div>
++            <!-- Copy icon -->
++            <svg class="card-action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
++              <rect x="9" y="9" width="13" height="13" rx="2"/>
++              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
++            </svg>
 +          </div>
-+          <span class="arrow">↗</span>
++          <div class="card-address">lanceljr98@gmail.com</div>
 +        </a>
-+        <a href="https://linkedin.com/in/lanceljr" class="contact-card" target="_blank">
-+          <div>
-+            <div class="ctype">LinkedIn</div>
-+            <div class="cval">/in/lanceljr</div>
++
++        <!-- LinkedIn card -->
++        <a href="https://linkedin.com/in/lanceljr" class="contact-card contact-card--linkedin" id="linkedinCard" target="_blank">
++          <div class="card-header">
++            <div class="card-meta">
++              <svg class="contact-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
++                <rect width="48" height="48" rx="8" fill="#0A66C2"/>
++                <path fill="#fff" d="M13 18.5h5V35h-5zM15.5 16.5a2.75 2.75 0 1 1 0-5.5 2.75 2.75 0 0 1 0 5.5zM35 35h-5v-8c0-2-.8-3-2.5-3S25 25.2 25 27v8h-5V18.5h5V21c.7-1.4 2.2-2.5 4.5-2.5C33 18.5 35 20.5 35 24.5V35z"/>
++              </svg>
++              <span class="card-type">LinkedIn</span>
++            </div>
++            <!-- Arrow icon -->
++            <svg class="card-action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
++              <line x1="7" y1="17" x2="17" y2="7"/>
++              <polyline points="7 7 17 7 17 17"/>
++            </svg>
 +          </div>
-+          <span class="arrow">↗</span>
++          <div class="card-address">/in/lanceljr</div>
 +        </a>
++
 +      </div>
 +    </section>
 +
@@ -6242,13 +6396,30 @@
 +      const isMobile = window.matchMedia('(max-width: 900px)').matches;
 +      try {
 +        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
-+        if (saved && typeof saved.x === 'number' && typeof saved.y === 'number') {
-+          const tooFar = isMobile && (Math.abs(saved.x) > 60 || Math.abs(saved.y) > 200);
-+          if (!tooFar) {
-+            postit.style.setProperty('--dx', saved.x + 'px');
-+            postit.style.setProperty('--dy', saved.y + 'px');
-+            if (typeof saved.rot === 'number') {
-+              postit.style.setProperty('--rot', saved.rot + 'deg');
++        if (saved && typeof saved.y === 'number') {
++          if (isMobile) {
++            // On mobile the post-it is centred by CSS margin:auto — only restore
++            // vertical drift, never horizontal offset (would shift it off-centre).
++            if (Math.abs(saved.y) <= 200) {
++              postit.style.setProperty('--dy', saved.y + 'px');
++              if (typeof saved.rot === 'number') {
++                postit.style.setProperty('--rot', saved.rot + 'deg');
++              }
++            }
++          } else {
++            // Desktop: restore both axes but discard positions that would push
++            // the post-it mostly off-screen (e.g. from a previous far-right drag).
++            const x = typeof saved.x === 'number' ? saved.x : 0;
++            const tooFar = Math.abs(x) > 450 || Math.abs(saved.y) > 350;
++            if (!tooFar) {
++              postit.style.setProperty('--dx', x + 'px');
++              postit.style.setProperty('--dy', saved.y + 'px');
++              if (typeof saved.rot === 'number') {
++                postit.style.setProperty('--rot', saved.rot + 'deg');
++              }
++            } else {
++              // Stale extreme position — wipe so the next reload starts fresh.
++              localStorage.removeItem(STORAGE_KEY);
 +            }
 +          }
 +        }
@@ -6298,6 +6469,23 @@
 +      postit.addEventListener('pointerdown', (e) => {
 +        // Don't start drag on interactive children
 +        if (e.target.closest('input, textarea, button, a, label')) return;
++
++        // Snapshot the CURRENT animated visual position before stopping the
++        // animation, so the post-it doesn't jump when animation: none kicks in.
++        // The lift animation may be mid-cycle (up to 10 px off), which causes
++        // a visible downward snap without this fix.
++        //   Desktop keyframe y = calc(-50% + --dy)  → matrix.m42 = -halfH + --dy + animDelta
++        //     => frozenDy = matrix.m42 + halfH
++        //   Mobile keyframe y  = var(--dy)           → matrix.m42 = --dy + animDelta
++        //     => frozenDy = matrix.m42
++        try {
++          const isMobileLayout = window.matchMedia('(max-width: 900px)').matches;
++          const matrix = new DOMMatrixReadOnly(window.getComputedStyle(postit).transform);
++          const halfH  = postit.offsetHeight / 2;
++          postit.style.setProperty('--dx', matrix.m41.toFixed(2) + 'px');
++          postit.style.setProperty('--dy', (isMobileLayout ? matrix.m42 : matrix.m42 + halfH).toFixed(2) + 'px');
++        } catch (_) { /* fallback: old behaviour if DOMMatrix not available */ }
++
 +        dragging = true;
 +        lastInteract = Date.now();
 +        postit.classList.add('dragging');
@@ -6346,23 +6534,15 @@
 +        const rot = -2.4 + Math.max(-3, Math.min(3, o.x / 80));
 +        postit.style.setProperty('--rot', rot.toFixed(2) + 'deg');
 +        try {
-+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ x: o.x, y: o.y, rot }));
++          // On mobile we never restore --dx, so always save x:0 to avoid
++          // a stale horizontal offset from mobile bleeds into desktop sessions.
++          localStorage.setItem(STORAGE_KEY, JSON.stringify({ x: isMobile ? 0 : o.x, y: o.y, rot }));
 +        } catch (_) { /* ignore */ }
 +      };
 +      postit.addEventListener('pointerup', endDrag);
 +      postit.addEventListener('pointercancel', endDrag);
 +
-+      // ── Idle wiggle: ~every 10s if user hasn't touched it ──
-+      setInterval(() => {
-+        if (dragging || document.hidden) return;
-+        if (Date.now() - lastInteract < 8000) return;
-+        // Skip if input is focused (don't be annoying while typing)
-+        if (document.activeElement && document.activeElement.closest('.postit')) return;
-+        postit.classList.remove('wiggling');
-+        void postit.offsetWidth;     // restart animation
-+        postit.classList.add('wiggling');
-+        setTimeout(() => postit.classList.remove('wiggling'), 800);
-+      }, 10000);
++      // Idle animation now handled by CSS postit-lift keyframes (no JS timer needed)
 +    })();
 +
 +    // ── Post-it: funny replies to "tell me about you" ──────
@@ -6592,6 +6772,84 @@
 +        setTimeout(() => themeBlob.classList.remove('bounce'), 600);
 +      }, 2000);
 +    }
++
++    // ── Contact cards — typewriter + clipboard ────────────
++    (() => {
++      // Create a single body-level tooltip that follows the cursor.
++      // Must be at <body> level so position:fixed isn't broken by the
++      // card's transform:translateY(-3px) hover lift (which creates a
++      // new containing block in Chrome/Safari and breaks fixed children).
++      const tip = document.createElement('div');
++      tip.className = 'cursor-tip';
++      tip.innerHTML = '<span class="tip-text"></span><span class="cursor"></span>';
++      document.body.appendChild(tip);
++      const tipText   = tip.querySelector('.tip-text');
++      const tipCursor = tip.querySelector('.cursor');
++
++      // Track cursor position globally and move the tip
++      document.addEventListener('mousemove', (e) => {
++        tip.style.left = e.clientX + 'px';
++        tip.style.top  = e.clientY + 'px';
++      });
++
++      let typeTimer = null;
++      function typewrite(msg) {
++        let i = 0;
++        tipText.textContent = '';
++        tipCursor.style.display = 'inline-block';
++        clearInterval(typeTimer);
++        typeTimer = setInterval(() => {
++          tipText.textContent += msg[i++];
++          if (i >= msg.length) clearInterval(typeTimer);
++        }, 36);
++      }
++      function hideTip() {
++        tip.classList.remove('visible');
++        clearInterval(typeTimer);
++        tipText.textContent = '';
++        tipCursor.style.display = 'none';
++      }
++
++      // Email card
++      const emailCard = document.getElementById('emailCard');
++      const EMAIL     = 'lanceljr98@gmail.com';
++      if (emailCard) {
++        emailCard.addEventListener('mouseenter', () => {
++          if (emailCard.classList.contains('copied')) return;
++          tip.classList.add('visible');
++          typewrite('click to copy email →');
++        });
++        emailCard.addEventListener('mouseleave', () => {
++          if (!emailCard.classList.contains('copied')) hideTip();
++        });
++        emailCard.addEventListener('click', (e) => {
++          e.preventDefault();
++          navigator.clipboard.writeText(EMAIL).then(() => {
++            clearInterval(typeTimer);
++            tipCursor.style.display = 'none';
++            tipText.textContent = 'copied! ✓';
++            tip.classList.add('visible');
++            emailCard.classList.add('copied');
++            setTimeout(() => {
++              emailCard.classList.remove('copied');
++              hideTip();
++            }, 2000);
++          });
++        });
++      }
++
++      // LinkedIn card
++      const linkedinCard = document.getElementById('linkedinCard');
++      if (linkedinCard) {
++        linkedinCard.addEventListener('mouseenter', () => {
++          tip.classList.add('visible');
++          typewrite('click here to find the corporate me');
++        });
++        linkedinCard.addEventListener('mouseleave', () => {
++          hideTip();
++        });
++      }
++    })();
 +
 +    // ── Parallax — delta-time exponential smoothing ────────
 +    //    Pure JS, no dependencies. Uses real elapsed time so motion is
